@@ -1,7 +1,10 @@
 package zubi.librarymanagement;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Scanner;
 //Alejandro Zubillaga , CEN-3024C-31950 05/16/2024
@@ -12,47 +15,19 @@ import java.util.Scanner;
 //List all books currently in the collection: The system should display a list of all the books currently in the collection, including their ID, title, and author.
 @SpringBootApplication
 public class LibraryManagementApplication {
-
     public static void main(String[] args) {
-
-
-        Library library = new Library();
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            System.out.println("\nLibrary Management System");
-            System.out.println("1. Add books from file");
-            System.out.println("2. Remove a book");
-            System.out.println("3. List all books");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice (1-4): ");
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    System.out.print("Enter the file path: ");
-                    String filePath = scanner.nextLine();
-                    library.addBooksFromFile(filePath);
-                    break;
-                case 2:
-                    System.out.print("Enter the book ID to remove: ");
-                    int bookId = scanner.nextInt();
-                    scanner.nextLine();
-                    library.removeBook(bookId);
-                    break;
-                case 3:
-                    library.listAllBooks();
-                    break;
-                case 4:
-                    System.out.println("Exiting Library Management System...");
-                    return;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
-        }
-
+        SpringApplication.run(LibraryManagementApplication.class, args);
     }
 
+    @Bean
+    public BookRepository bookRepository(JdbcTemplate jdbcTemplate) {
+        return new JdbcBookRepository(jdbcTemplate);
+    }
+
+    @Bean
+    public CommandLineRunner commandLineRunner(Library library) {
+        return args -> {
+            // menu and user input handling
+        };
+    }
 }
